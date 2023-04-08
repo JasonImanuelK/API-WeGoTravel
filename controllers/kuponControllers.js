@@ -61,14 +61,14 @@ exports.getKuponUser = async (req, res) => {
     }
 };
 
-// exports.updateKupon(id_kupon, update_kupon)(String){
-//     try {
-//         const updated_kupon = await Kupon.findByIdAndUpdate(id_kupon, update_kupon);
-        
-//     } catch (err) {
-//         return err.message;
-//     }
-// };
+exports.updateKupon = async (id_kupon, update_kupon) => {
+    try {
+        const updated_kupon = await Kupon.findByIdAndUpdate(id_kupon, update_kupon);
+        return updated_kupon;
+    } catch (err) {
+        return err.message;
+    }
+};
 
 exports.deleteKupon = async (req, res) => {
     try {
