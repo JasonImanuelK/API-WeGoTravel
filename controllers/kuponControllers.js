@@ -6,9 +6,9 @@ const Kupon = require('./../models/kuponModels');
 dotenv.config ({ path: './config.env'});
 
 exports.createKupon = async (req, res) => {
-    const { nama_voucher, nilai, tipe_tiket, statusPenggunaan, id_pengguna }  = req.body;
+    const { nama_kupon, nilai, tipe_kupon, statusPenggunaan, id_pengguna }  = req.body;
     try {
-        const newKupon = new Kupon ({ nama_voucher, nilai, tipe_tiket, statusPenggunaan, id_pengguna });
+        const newKupon = new Kupon ({ nama_kupon, nilai, tipe_kupon, statusPenggunaan, id_pengguna });
         await newKupon.save();
 
         res.status(201).json({
@@ -41,7 +41,7 @@ exports.getKuponAdmin = async (req, res) => {
 
 exports.getKuponUser = async (req, res) => {
     try {
-        const id_pengguna = req.header('id_pengguna');
+        const id_pengguna = req.params('id_pengguna');
         const kupon = await Kupon.find({ id_pengguna: id_pengguna});
         
         if(kupon.length==0){
@@ -69,3 +69,26 @@ exports.getKuponUser = async (req, res) => {
 //         return err.message;
 //     }
 // };
+
+exports.deleteKupon = async (req, res) => {
+    try {
+        const id_kupon = req.params.id_kupon;
+    
+        const delete_kupon = await Kupon.findByIdAndDelete(id_kupon);
+    
+        if (delete_kupon!=null) {
+            res.status(201).json({
+                status: 'success',
+                message: 'Kupon berhasil di hapus!'
+            });
+        } else {
+            res.status(201).json({
+                status: 'success',
+                message: 'Kupon tidak ditemukan!'
+            });
+        }
+    } catch (error) {
+        console.error(err.message);
+        res.status(500).send('Server error !');
+    }
+};
