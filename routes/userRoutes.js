@@ -13,15 +13,15 @@ router
 .post(userControllers.login)
 
 router
+.route('/lupaPassword')
+.put(userControllers.lupaPassword)
+
+router
 .route('/getProfile/:id')
 .get(auth("all_user"), userControllers.getProfile)
 
 router
 .route('/updateProfile/:id')
 .put(auth("all_user"), userControllers.updateProfile)
-
-router
-.route('/lupaPassword')
-.put(auth("all_user"), userControllers.lupaPassword)
 
 module.exports = router;
