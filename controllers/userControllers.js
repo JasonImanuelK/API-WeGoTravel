@@ -89,3 +89,46 @@ exports.getProfile = async (req, res) => {
         res.status(500).send('Server error !');
     }
 };
+
+exports.updateProfile = async (req, res) => {
+    const id = req.params.id;
+    const update_profile = {role:"user"}
+    const{ username, password, tanggal_lahir, email, jenis_kelamin, nomor_telepon, alamat } = req.body
+    if(password!=null){
+        res.status(500).json({
+            status: 'Error',
+            message: 'Password tidak boleh di ubah!'
+        });
+    } if(username!=null){
+        update_profile.username = username
+    }  if(tanggal_lahir!=null){
+        update_profile.tanggal_lahir = tanggal_lahir
+    } if(email!=null){
+        update_profile.email = email
+    } if(jenis_kelamin!=null){
+        update_profile.jenis_kelamin = jenis_kelamin
+    } if(nomor_telepon!=null){
+        update_profile.nomor_telepon = nomor_telepon
+    } if(alamat!=null){
+        update_profile.alamat = alamat
+    } 
+    
+    try {
+        const updated_profile = await User.findByIdAndUpdate(id, update_profile);
+
+        if (updated_profile!=null) {
+            res.status(201).json({
+                status: 'success',
+                message: 'Profile berhasil di update!'
+            });
+        } else {
+            res.status(201).json({
+                status: 'success',
+                message: 'Pengguna tidak ditemukan!'
+            });
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error !');
+    }
+};

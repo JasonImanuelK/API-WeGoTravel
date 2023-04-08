@@ -16,4 +16,8 @@ router
 .route('/:id')
 .get(auth("user"), userControllers.getProfile)
 
+router
+.route('/updateProfile/:id')
+.put(auth("user"), userControllers.updateProfile)
+
 module.exports = router;
