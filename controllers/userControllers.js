@@ -6,7 +6,7 @@ const User = require('./../models/userModels');
 dotenv.config ({ path: './config.env'});
 
 exports.createUser = async (req, res) => {
-    const { username, email, password, jenis_kelamin, tanggal_lahir, nomor_telepon, alamat }  = req.body;
+    const { username, email, password, jenis_kelamin, tanggal_lahir, nomor_telepon, alamat, role }  = req.body;
     try {
         const existingUser = await User.findOne({ email });
 
@@ -17,7 +17,7 @@ exports.createUser = async (req, res) => {
             });
         }
 
-        const newUser = new User ({ username, email, password, jenis_kelamin, tanggal_lahir, nomor_telepon, alamat });
+        const newUser = new User ({ username, email, password, jenis_kelamin, tanggal_lahir, nomor_telepon, alamat, role });
         await newUser.save();
 
         res.status(201).json({
@@ -55,7 +55,14 @@ exports.login = async (req, res) => {
             });
         }
 
-        const payload = { user: { id: user.id } };
+        const payload = {
+            user: {
+              id: user.id,
+              name: user.username,
+              email: user.email,
+              role: user.role
+            }
+          };
         const token = jwt.sign(payload, process.env.SECRET, { expiresIn: process.env.EXPIRESIN });
 
         res.status(200).json({
