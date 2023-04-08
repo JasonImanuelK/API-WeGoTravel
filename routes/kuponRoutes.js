@@ -16,9 +16,9 @@ router
 .route('/lihatKupon/:id_kupon')
 .get(auth('user'), kuponControllers.getKuponUser)
 
-// router
-// .route('/updateKupon/:id_kupon')
-// .put(auth('user'), kuponControllers.updateKupon)
+router
+.route('/updateKupon/:id_kupon')
+.put(auth('user'), kuponControllers.updateKupon)
 
 router
 .route('/deleteKupon/:id_kupon')
