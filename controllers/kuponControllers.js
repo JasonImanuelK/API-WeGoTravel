@@ -25,13 +25,13 @@ exports.createKupon = async (req, res) => {
     }
 };
 
-exports.getKupon = async (req, res) => {
+exports.getKuponAdmin = async (req, res) => {
     try {
-        const kupon = await Kupon.findById(req.params.id_kupon).select('');
+        const kupon = await Kupon.find();
         
         res.status(201).json({
             status: 'success',
-            user: user
+            kupon: kupon
         });
     } catch (err) {
         console.error(err.message);
@@ -39,16 +39,33 @@ exports.getKupon = async (req, res) => {
     }
 };
 
-exports.getKupon = async (req, res) => {
+exports.getKuponUser = async (req, res) => {
     try {
-        const kupon = await Kupon.findById(req.params.id_kupon).select('');
+        const id_pengguna = req.header('id_pengguna');
+        const kupon = await Kupon.find({ id_pengguna: id_pengguna});
         
-        res.status(201).json({
-            status: 'success',
-            user: user
-        });
+        if(kupon.length==0){
+            res.status(201).json({
+                status: 'success',
+                message: 'Tidak memiliki kupon'
+            });
+        }else{
+            res.status(201).json({
+                status: 'success',
+                kupon: kupon
+            });
+        }
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error !');
     }
 };
+
+// exports.updateKupon(id_kupon, update_kupon)(String){
+//     try {
+//         const updated_kupon = await Kupon.findByIdAndUpdate(id_kupon, update_kupon);
+        
+//     } catch (err) {
+//         return err.message;
+//     }
+// };
