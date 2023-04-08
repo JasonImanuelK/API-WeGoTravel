@@ -14,6 +14,6 @@ router
 
 router
 .route('/:id')
-.get(auth, userControllers.getProfile)
+.get(auth("user"), userControllers.getProfile)
 
 module.exports = router;
