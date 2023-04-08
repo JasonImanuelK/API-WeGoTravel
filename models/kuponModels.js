@@ -5,20 +5,22 @@ const kuponSchema = new mongoose.Schema({
     nama_voucher: {
         type: String,
         required: [true],
-        unique: true
+        unique: false
     },
     nilai: {
         type: Number,
-        required: true
+        required: true,
+        unique: false
     },
     tipe_tiket:{
         type: String,
         required: [true],
+        unique: false
     },
     statusPenggunaan: {
         type: String,
         required: [true],
-        unique: true
+        unique: false
     },
     id_pengguna: {
         type: String,
