@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(401).json({
                 status: 'fail',
-                message: 'Invalid credential lokapala'
+                message: 'Invalid credential.'
             });
         }
         
@@ -120,6 +120,37 @@ exports.updateProfile = async (req, res) => {
             res.status(201).json({
                 status: 'success',
                 message: 'Profile berhasil di update!'
+            });
+        } else {
+            res.status(201).json({
+                status: 'success',
+                message: 'Pengguna tidak ditemukan!'
+            });
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error !');
+    }
+};
+
+exports.lupaPassword = async (req, res) => {
+    const{ new_password, email } = req.body
+    let hashed_pass;
+    try {
+        bcrypt.hash(new_password, 10, (err, hash) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send("Password can't be hashed");
+            }
+            hashed_pass = hash
+        });
+
+        const updated_pass_user = await User.findOneAndUpdate({email :email}, {password: hashed_pass},{useFindAndModify: false});
+
+        if (updated_pass_user!=null) {
+            res.status(201).json({
+                status: 'success',
+                message: 'Password berhasil dirubah!'
             });
         } else {
             res.status(201).json({
