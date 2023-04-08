@@ -1,6 +1,6 @@
 const Hotel = require('../models/hotelModels')
 const Kamar = require('../models/kamarModels')
-const tiketHotel = require('../models/tikethotelModels')
+const tiketHotel = require('../models/tiketHotelModels')
 
 exports.getHotel = async (req, res) => {
     const {kota, tanggal_menginap}=req.body;

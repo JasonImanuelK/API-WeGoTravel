@@ -1,9 +1,4 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
 const Kupon = require('./../models/kuponModels');
-
-dotenv.config ({ path: './config.env'});
 
 exports.createKupon = async (req, res) => {
     const { nama_kupon, nilai, tipe_kupon, statusPenggunaan, id_pengguna }  = req.body;
@@ -63,7 +58,7 @@ exports.getKuponUser = async (req, res) => {
 
 exports.updateKupon = async (id_kupon, update_kupon) => {
     try {
-        const updated_kupon = await Kupon.findByIdAndUpdate(id_kupon, update_kupon);
+        const updated_kupon = await Kupon.findByIdAndUpdate(id_kupon, {statusPenggunaan:"Tidak Berlaku"});
         return updated_kupon;
     } catch (err) {
         return err.message;
