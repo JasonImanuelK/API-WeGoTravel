@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const kuponSchema = new mongoose.Schema({
-    nama_voucher: {
+    nama_kupon: {
         type: String,
         required: [true],
         unique: false
@@ -12,7 +12,7 @@ const kuponSchema = new mongoose.Schema({
         required: true,
         unique: false
     },
-    tipe_tiket:{
+    tipe_kupon:{
         type: String,
         required: [true],
         unique: false
