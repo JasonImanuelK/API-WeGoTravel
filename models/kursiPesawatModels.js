@@ -9,16 +9,16 @@ const kursiPesawatSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Tipe kursi harus diisi']
     },
-    harga: {
+    harga_kursi: {
         type: Number,
         required: [true, 'Harga harus diisi']
     },
-    status: {
+    status_kursi: {
         type: String,
         required: [true, 'Status harus diisi']
     },
     id_pesawat: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: [true, 'Id pesawat harus diisi']
     }
 });
