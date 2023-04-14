@@ -4,6 +4,7 @@ const cors = require('cors');
 const userRouter =  require('./routes/userRoutes');
 const kuponRouter = require('./routes/kuponRoutes');
 const historyRouter = require('./routes/historyRoutes');
+const hotelRouter = require('./routes/hotelRoutes');
 
 const app = express();
 
@@ -18,5 +19,5 @@ app.use((req, res, next) => {
 app.use('/api/v1/users',userRouter);
 app.use('/api/v1/kupon',kuponRouter);
 app.use('/api/v1/history',historyRouter);
-
+app.use('/api/v1/hotel',hotelRouter);
 module.exports = app;
