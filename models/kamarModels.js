@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const kamarSchema = new mongoose.Schema({
+    id_hotel: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hotel',
+        required: [true, 'tiket hotel harus memiliki id_hotel']
+    },
     tipe_kamar: {
         type: String,
         required: [true, 'Kamar harus memiliki tipe kamar'],
