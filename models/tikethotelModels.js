@@ -55,12 +55,17 @@ const tiketHotelSchema = new mongoose.Schema({
     },
     id_kamar: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Kamar',
+        ref: 'kamar',
         required: [true, 'tiket hotel harus memiliki id_kamar']
     },
     id_hotel: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hotel',
+        ref: 'hotel',
+        required: [true, 'tiket hotel harus memiliki id_hotel']
+    },
+    id_pengguna:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
         required: [true, 'tiket hotel harus memiliki id_hotel']
     }
 });
