@@ -1,29 +1,28 @@
 const mongoose = require('mongoose');
-const KursiPesawat = require('./../models/pesawatModels');
 
 const tiketPesawatSchema = new mongoose.Schema({
     tanggal_pemesanan: {
-        type: String,
+        type: Date,
         required: [true, 'Tanggal pemesanan harus diisi']
     },
     status_pemesanan:{
         type: String,
         required: [true, 'Status harus diisi']
     },
-    nama_pemesan: {
-        type: Number,
-        required: [true, 'Nama pemesan harus diisi']
+    nama_depan: {
+        type: String,
+        required: [true, 'Nama depan harus diisi']
     },
-    nama_pemesan: {
-        type: (String, String),
-        required: [true, 'Nama pesan harus diisi']
+    nama_belakang: {
+        type: String,
+        required: [true, 'Nama belakang harus diisi']
     },
     jenis_kelamin: {
         type: String,
         required: [true, 'Jenis kelamin harus diisi']
     },
     tanggal_lahir: {
-        type: String,
+        type: Date,
         required: [true, 'Tanggal lahir harus diisi']
     },
     email: {
@@ -34,9 +33,40 @@ const tiketPesawatSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Nomor telepon harus diisi']
     },
-    kursiPesawat: {
-        type: KursiPesawat,
-        required: [true, 'Id pesawat harus diisi']
+    id_kursi: {
+        type: String,
+        required: [true, 'Id kursi harus diisi']
+    },
+    nomor_kursi: {
+        type: String,
+        required: [true, 'Nomor kursi harus diisi']
+    },
+    tipe_kursi:{
+        type: String,
+        required: [true, 'Tipe kursi harus diisi']
+    },
+    harga_kursi: {
+        type: Number,
+        required: [true, 'Harga harus diisi']
+    },
+    maskapai: {
+        type: String,
+        required: [true, 'Maskapai harus diisi']
+    },
+    tempat_berangkat:{
+        type: String,
+        required: [true, 'Tempat keberangkatan harus diisi']
+    },
+    tujuan_berangkat: {
+        type: String,
+        required: [true, 'Tujuan keberangkatan harus diisi']
+    },
+    tanggal_jam_berangkat: {
+        type: Date,
+        required: [true, 'Tanggal dan jam keberangkatan harus diisi']
+    },
+    id_voucher: {
+        type: String
     }
 });
 
