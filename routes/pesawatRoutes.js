@@ -5,23 +5,23 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 router
-.route('/pesawat')
+.route('/')
 .get(pesawatControllers.lihatPesawat)
 
 router
-.route('/pesawat/kursi')
+.route('/kursi/:id')
 .get(pesawatControllers.lihatKursi)
 
 router
-.route('/pesawat/pesan')
-.post(auth, pesawatControllers.pesanPesawat)
+.route('/pesan')
+.post(pesawatControllers.pesanPesawat)
 
 router
-.route('/pesawat/batal')
-.put(auth, pesawatControllers.batalPesawat)
+.route('/batal')
+.put(pesawatControllers.batalPesawat)
 
 router
-.route('/pesawat/selesai')
-.put(auth, pesawatControllers.selesaiPesawat)
+.route('/selesai')
+.put(pesawatControllers.selesaiPesawat)
 
 module.exports = router;

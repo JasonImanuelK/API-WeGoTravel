@@ -7,11 +7,11 @@ dotenv.config ({ path: './config.env'});
 
 exports.lihatPesawat = async (req, res) => {
     //meminta filter dari body
-    const {f_tempat_berangkat, f_tujuan_berangkat, f_tanggal_jam_berangkat}  = req.body;
+    const {tempat_berangkat, tujuan_berangkat, tanggal_jam_berangkat}  = req.body;
 
     try {
         //search pesawat sesuai filter
-        const arrpesawat = await Pesawat.find({tempat_berangkat: f_tempat_berangkat, tujuan_berangkat: f_tujuan_berangkat, tanggal_jam_berangkat: f_tanggal_jam_berangkat});
+        const arrpesawat = await Pesawat.find({tempat_berangkat: tempat_berangkat, tujuan_berangkat: tujuan_berangkat, tanggal_jam_berangkat: tanggal_jam_berangkat});
 
         if (arrpesawat) {
             return res.status(201).json({
@@ -24,17 +24,17 @@ exports.lihatPesawat = async (req, res) => {
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.lihatKursi = async (req, res) => {
     //meminta id pesawat yang akan dilihat kursinya
-    const {f_id_pesawat}  = req.body;
+    const id_pesawat  = req.params.id;
     try {
         //search kursi pada pesawat tersebut yang kosong
-        const arrkursi = await KursiPesawat.find({id_pesawat: f_id_pesawat, status_kursi: 'Kosong'});
+        const arrkursi = await KursiPesawat.find({id_pesawat: id_pesawat, status_kursi: 'Kosong'});
 
         if (arrkursi) {
             return res.status(201).json({
@@ -47,18 +47,18 @@ exports.lihatKursi = async (req, res) => {
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.pesanPesawat = async (req, res) => {
     //minta detail pemesanan dari body
-    const {f_id_kursi, f_tanggal_pemesanan, f_status_pemesanan, f_nama_pemesan, f_jenis_kelamin, f_tanggal_lahir, f_email, f_nomor_telepon}  = req.body;
+    const {id_kursi, tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_voucher}  = req.body;
 
     try {
         //cari kursi yang ingin dipesan
-        const kursi = await KursiPesawat.findById(f_id_kursi).select('');
+        const kursi = await KursiPesawat.findById(id_kursi).select('');
 
         if (!kursi) {
             return res.status(400).json({
@@ -78,7 +78,7 @@ exports.pesanPesawat = async (req, res) => {
         }
 
         //ambil data dari kursi yang akan disimpan dalam tiket
-        const id_kursi = kursi._id;
+        // const id_kursi = kursi._id;
         const nomor_kursi = kursi.nomor_kursi;
         const tipe_kursi = kursi.tipe_kursi;
         const harga_kursi = kursi.harga_kursi;
@@ -90,27 +90,39 @@ exports.pesanPesawat = async (req, res) => {
         const tanggal_jam_berangkat = pesawat.tanggal_jam_berangkat;
 
         //isi data dalam tiket lalu insert
-        const pesanan = new TiketPesawat ({f_tanggal_pemesanan, f_status_pemesanan, f_nama_pemesan, f_jenis_kelamin, f_tanggal_lahir, f_email, f_nomor_telepon, nomor_kursi, tipe_kursi, harga_kursi, maskapai, tempat_berangkat, tujuan_berangkat, tanggal_jam_berangkat, id_voucher});
-        await pesanan.save();
-
+        const pesanan = new TiketPesawat ({tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_kursi, nomor_kursi, tipe_kursi, harga_kursi, maskapai, tempat_berangkat, tujuan_berangkat, tanggal_jam_berangkat, id_voucher});
+        
         //update kursi yang dipesan menjadi terisi
         const update_kursi = await KursiPesawat.findByIdAndUpdate(id_kursi, {status_kursi:"Terisi"});
-        return updated_kupon;
+        
+        if (!update_kursi) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Error update kursi'
+            });
+        } else {
+            await pesanan.save();
+            return res.status(200).json({
+                status: 'success',
+                message: 'Berhasil update kursi'
+            });
+        }
+        
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.batalPesawat = async (req, res) => {
     //minta id tiket yang akan dibatalkan
-    const {f_id_tiket_pesawat}  = req.body;
+    const {id_tiket_pesawat}  = req.body;
 
     try {
         //cari tiket yang akan dibatalkan
-        const tiket = await TiketPesawat.findById(f_id_tiket_pesawat).select('');
+        const tiket = await TiketPesawat.findById(id_tiket_pesawat).select('');
         
         if (!tiket) {
             return res.status(400).json({
@@ -131,29 +143,34 @@ exports.batalPesawat = async (req, res) => {
         }
         
         //update tiket menjadi dibatalkan
-        const update_tiket = await TiketPesawat.findByIdAndUpdate(f_id_tiket_pesawat, {status_pemesanan:"Dibatalkan"});
+        const update_tiket = await TiketPesawat.findByIdAndUpdate(id_tiket_pesawat, {status_pemesanan:"Dibatalkan"});
 
         if (!update_tiket) {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Error update tiket pesawat'
             });
+        } else {
+            return res.status(200).json({
+                status: 'success',
+                message: 'Berhasil update tiket'
+            });
         }
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.selesaiPesawat = async (req, res) => {
     //minta id tiket yang sudah selesai pesanannya
-    const {f_id_tiket_pesawat}  = req.body;
+    const {id_tiket_pesawat}  = req.body;
 
     try {
         //cari tiket yang sudah selesai pesanannya
-        const tiket = await TiketPesawat.findById(f_id_tiket_pesawat).select('');
+        const tiket = await TiketPesawat.findById(id_tiket_pesawat).select('');
         
         if (!tiket) {
             return res.status(400).json({
@@ -174,18 +191,23 @@ exports.selesaiPesawat = async (req, res) => {
         }
         
         //update tiket menjadi selesai
-        const update_tiket = await TiketPesawat.findByIdAndUpdate(f_id_tiket_pesawat, {status_pemesanan:"Selesai"});
+        const update_tiket = await TiketPesawat.findByIdAndUpdate(id_tiket_pesawat, {status_pemesanan:"Selesai"});
 
         if (!update_tiket) {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Error update tiket pesawat'
             });
+        } else {
+            return res.status(200).json({
+                status: 'success',
+                message: 'Berhasil update tiket'
+            });
         }
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };

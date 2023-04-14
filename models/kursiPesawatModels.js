@@ -18,7 +18,7 @@ const kursiPesawatSchema = new mongoose.Schema({
         required: [true, 'Status harus diisi']
     },
     id_pesawat: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         required: [true, 'Id pesawat harus diisi']
     }
 });

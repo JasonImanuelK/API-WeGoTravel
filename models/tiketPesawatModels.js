@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const tiketPesawatSchema = new mongoose.Schema({
     tanggal_pemesanan: {
-        type: String,
+        type: Date,
         required: [true, 'Tanggal pemesanan harus diisi']
     },
     status_pemesanan:{
@@ -22,7 +22,7 @@ const tiketPesawatSchema = new mongoose.Schema({
         required: [true, 'Jenis kelamin harus diisi']
     },
     tanggal_lahir: {
-        type: String,
+        type: Date,
         required: [true, 'Tanggal lahir harus diisi']
     },
     email: {
@@ -66,7 +66,7 @@ const tiketPesawatSchema = new mongoose.Schema({
         required: [true, 'Tanggal dan jam keberangkatan harus diisi']
     },
     id_voucher: {
-        type: Date
+        type: String
     }
 });
 
