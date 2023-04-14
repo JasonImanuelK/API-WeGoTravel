@@ -2,23 +2,25 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const kuponSchema = new mongoose.Schema({
-    nama_voucher: {
+    nama_kupon: {
         type: String,
         required: [true],
-        unique: true
+        unique: false
     },
     nilai: {
         type: Number,
-        required: true
+        required: true,
+        unique: false
     },
-    tipe_tiket:{
+    tipe_kupon:{
         type: String,
         required: [true],
+        unique: false
     },
     statusPenggunaan: {
         type: String,
         required: [true],
-        unique: true
+        unique: false
     },
     id_pengguna: {
         type: String,
