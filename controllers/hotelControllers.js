@@ -30,7 +30,7 @@ exports.getKamar = async (req, res) => {
         // const idKamar = req.params.id;
         const {idHotel} = req.body;
         console.log(idHotel)
-        const kamars = await Kamar.find({id_hotel: idHotel},{jumlah_kamar_tersisa: { $gt: 0 }});
+        const kamars = await Kamar.find({id_hotel: idHotel, jumlah_kamar_tersisa: { $gt: 0 }});
         console.log(kamars)
         if (!kamars) {
             return res.status(404).json({
