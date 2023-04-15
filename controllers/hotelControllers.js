@@ -6,9 +6,7 @@ const TiketHotel = require('../models/tiketHotelModels')
 exports.getHotel = async (req, res) => {
     try {
         const {kota} = req.body;
-        console.log(kota)
         const hotels = await Hotel.find({ kota: kota});
-        console.log(hotels)
         if (hotels == null) {
             return res.status(404).json({
                 success: false,
@@ -22,40 +20,40 @@ exports.getHotel = async (req, res) => {
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.getKamar = async (req, res) => {
     try {
-        const idKamar = req.params.id;
-        const idHotel = req.params.idHotel;
-        const kamar = await Kamar.findOne({ _id: idKamar, hotel: idHotel });
-        if (!kamar) {
+        // const idKamar = req.params.id;
+        const {idHotel} = req.body;
+        console.log(idHotel)
+        const kamars = await Kamar.find({id_hotel: idHotel},{jumlah_kamar_tersisa: { $gt: 0 }});
+        console.log(kamars)
+        if (!kamars) {
             return res.status(404).json({
                 success: false,
-                message: "Kamar dengan ID tersebut tidak ditemukan pada hotel yang dipilih"
+                message: "Kamar tidak ditemukan pada hotel yang dipilih"
             });
         }
         res.status(200).json({
             success: true,
-            data: {
-                kamar
-            }
+            data: kamars
         });
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.pesanHotel = async (req, res) => {
     try {
-        const { tanggal_pemesanan, nama_pemesan, jenis_kelamin, tanggal_lahir, email, nomor_telepon, tipe_kamar, harga, ukuran, lama_menginap, tanggal_menginap, id_voucher } = req.body
-        const kamar = await Kamar.findById(req.params.id);
+        const { tanggal_pemesanan, status_pemesanan, nama_pemesan, jenis_kelamin, tanggal_lahir, email, nomor_telepon, tipe_kamar, harga, lama_menginap, tanggal_menginap, id_voucher, id_kamar, id_hotel, id_pengguna } = req.body
+        const kamar = await Kamar.findById(id_kamar);
         if (!kamar) {
             return res.status(404).json({
                 success: false,
@@ -63,8 +61,12 @@ exports.pesanHotel = async (req, res) => {
             });
         }
 
-        const tiketHotel = new tiketHotel({ tanggal_pemesanan, nama_pemesan, jenis_kelamin, tanggal_lahir, email, nomor_telepon, tipe_kamar, harga, ukuran, lama_menginap, tanggal_menginap, id_voucher, kamar: kamar._id, hotel: hotel._id });
-        await tiketHotel.save();
+        const tiketHotel = new TiketHotel({ tanggal_pemesanan, status_pemesanan, nama_pemesan, jenis_kelamin, tanggal_lahir, email, nomor_telepon, tipe_kamar, harga, lama_menginap, tanggal_menginap, id_voucher, id_kamar, id_hotel, id_pengguna });
+        if(tiketHotel){
+            kamar.jumlah_kamar_tersisa -= 1;
+            await kamar.save();
+            await tiketHotel.save();
+        }
 
         res.status(201).json({
             status: 'success',
@@ -75,24 +77,25 @@ exports.pesanHotel = async (req, res) => {
     } catch (err) {
         res.status(400).json({
             status: 'fail',
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.cancelPesanan = async (req, res) => {
     try {
-        const id_pesanan = req.params.id_pesanan;
-        const pesanan = await tiketHotel.findById(id_pesanan);
-
+        const {id_pesanan} = req.body;
+        const pesanan = await TiketHotel.findByIdAndUpdate(id_pesanan,{status_pemesanan:"Dibatalkan"});
+       
         if (!pesanan) {
             return res.status(404).json({
                 status: 'fail',
                 message: 'Pesanan tidak ditemukan!'
             });
         }
-
-        await pesanan.remove();
+        const kamar = await Kamar.findById(pesanan.id_kamar);
+        kamar.jumlah_kamar_tersisa += 1;
+        await kamar.save();
 
         res.status(201).json({
             status: 'success',
@@ -105,10 +108,11 @@ exports.cancelPesanan = async (req, res) => {
 };
 
 
-exports.checkout = async (id_pesanan, update_kamar) => {
+exports.checkout = async (req, res) => {
+    const {id_pesanan}=req.body
     try {
         // Dapatkan data pesanan yang akan di-checkout
-        const pesanan = await tiketHotel.findById(id_pesanan);
+        const pesanan = await TiketHotel.findById(id_pesanan);
 
         if (!pesanan) {
             throw new Error('Pesanan tidak ditemukan!');
@@ -122,21 +126,19 @@ exports.checkout = async (id_pesanan, update_kamar) => {
         }
 
         // Perbarui jumlah kamar yang tersisa
-        kamar.jumlah_tersedia += pesanan.jumlah_kamar;
+        kamar.jumlah_kamar_tersisa += 1;
         await kamar.save();
 
-        // Update status pesanan menjadi 'checked-out'
-        pesanan.status = 'checked-out';
+        // Update status pesanan menjadi 'selesai'
+        pesanan.status_pemesanan = 'Selesai';
         await pesanan.save();
 
-        // Update data kamar jika ada
-        if (update_kamar) {
-            kamar.set(update_kamar);
-            await kamar.save();
-        }
-
-        return pesanan;
+        res.status(201).json({
+            status: 'success',
+            message: 'Berhasil Checkout!'
+        });
     } catch (err) {
+        res.status(500).send('Server error !');
         return err.message;
     }
 };

@@ -18,10 +18,10 @@ router
 
 router
 .route('/cancelPesanan')
-.put(auth('admin'), hotelControllers.cancelPesanan)
+.put(auth('user'), hotelControllers.cancelPesanan)
 
 router
 .route('/checkout')
-.put(auth('admin'), hotelControllers.checkout)
+.put(auth('all_user'), hotelControllers.checkout)
 
 module.exports = router;

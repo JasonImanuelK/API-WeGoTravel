@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const kamarSchema = new mongoose.Schema({
     id_hotel: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Hotel',
         required: [true, 'tiket hotel harus memiliki id_hotel']
     },
