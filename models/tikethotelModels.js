@@ -37,10 +37,6 @@ const tiketHotelSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'tiket hotel harus memiliki harga'],
     },
-    ukuran: {
-        type: Number,
-        required: [true, 'tiket hotel harus memiliki ukuran'],
-    },
     lama_menginap: {
         type: Number,
         required: [true, 'tiket hotel harus memiliki lama menginap'],
@@ -50,23 +46,22 @@ const tiketHotelSchema = new mongoose.Schema({
         required: [true, 'tiket hotel harus memiliki tanggal menginap'],
     },
     id_voucher: {
-        type: String,
-        required: [true, 'tiket hotel harus memiliki id_voucher'],
+        type: String
     },
     id_kamar: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'kamar',
         required: [true, 'tiket hotel harus memiliki id_kamar']
     },
     id_hotel: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'hotel',
         required: [true, 'tiket hotel harus memiliki id_hotel']
     },
     id_pengguna:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'user',
-        required: [true, 'tiket hotel harus memiliki id_hotel']
+        required: [true, 'tiket hotel harus memiliki id_pengguna']
     }
 });
 
