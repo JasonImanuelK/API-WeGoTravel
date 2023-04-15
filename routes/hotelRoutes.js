@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
 .route('/lihatHotel')
-.post(auth('user'), hotelControllers.getHotel)
+.get(auth('user'), hotelControllers.getHotel)
 
 router
 .route('/lihatKamar')
@@ -14,7 +14,7 @@ router
 
 router
 .route('/pesanHotel')
-.get(auth('user'), hotelControllers.pesanHotel)
+.post(auth('user'), hotelControllers.pesanHotel)
 
 router
 .route('/cancelPesanan')
@@ -22,6 +22,6 @@ router
 
 router
 .route('/checkout')
-.delete(auth('admin'), hotelControllers.checkout)
+.put(auth('admin'), hotelControllers.checkout)
 
 module.exports = router;
