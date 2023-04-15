@@ -15,7 +15,7 @@ const hotelSchema = new mongoose.Schema({
     },
     kota: {
         type: String,
-        required: [true, 'Hotel harus memiliki price']
+        required: [true, 'Hotel harus memiliki kota']
     },
     deskripsi: {
         type: String,

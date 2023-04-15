@@ -1,12 +1,20 @@
 const Hotel = require('../models/hotelModels')
 const Kamar = require('../models/kamarModels')
-const tiketHotel = require('../models/tikethotelModels')
+const TiketHotel = require('../models/tiketHotelModels')
 
 //get hotel based on kota dan tanggal mengingap
 exports.getHotel = async (req, res) => {
     try {
-        const { kota, tanggal_menginap } = req.body;
-        const hotels = await Hotel.find({ kota: kota, tglCheckin: tanggal_menginap });
+        const {kota} = req.body;
+        console.log(kota)
+        const hotels = await Hotel.find({ kota: kota});
+        console.log(hotels)
+        if (hotels == null) {
+            return res.status(404).json({
+                success: false,
+                message: "hotel tidak ditemukan pada filter yang dipilih"
+            });
+        }
         res.status(200).json({
             success: true,
             data: hotels

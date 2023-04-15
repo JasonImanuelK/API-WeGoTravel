@@ -70,6 +70,6 @@ const tiketHotelSchema = new mongoose.Schema({
     }
 });
 
-const tiketHotel = mongoose.model('tiketHotel', tiketHotelSchema);
+const TiketHotel = mongoose.model('TiketHotel', tiketHotelSchema);
 
-module.exports = tiketHotel;
+module.exports = TiketHotel;
