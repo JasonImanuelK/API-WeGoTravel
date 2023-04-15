@@ -6,10 +6,10 @@ const router = express.Router();
 
 router
 .route('/lihatHistoryPesawat/:id_pengguna')
-.post(auth('user'), historyControllers.getTiketPesawat)
+.get(auth('user'), historyControllers.getTiketPesawat)
 
 router
 .route('/lihatHistoryHotel/:id_pengguna')
-.post(auth('user'), historyControllers.getTiketHotel)
+.get(auth('user'), historyControllers.getTiketHotel)
 
 module.exports = router;

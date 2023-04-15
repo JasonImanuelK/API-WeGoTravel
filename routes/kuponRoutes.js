@@ -13,12 +13,8 @@ router
 .get(auth('admin'), kuponControllers.getKuponAdmin)
 
 router
-.route('/lihatKupon/:id_kupon')
+.route('/lihatKupon/:id_pengguna')
 .get(auth('user'), kuponControllers.getKuponUser)
-
-router
-.route('/updateKupon/:id_kupon')
-.put(auth('user'), kuponControllers.updateKupon)
 
 router
 .route('/deleteKupon/:id_kupon')
