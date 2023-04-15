@@ -135,16 +135,11 @@ exports.updateProfile = async (req, res) => {
 
 exports.lupaPassword = async (req, res) => {
     const{ new_password, email } = req.body
-    let hashed_pass;
+    
     try {
-        bcrypt.hash(new_password, 10, (err, hash) => {
-            if (err) {
-                console.error(err.message);
-                res.status(500).send("Password can't be hashed");
-            }
-            hashed_pass = hash
-        });
-
+        const hashed_pass = await bcrypt.hash(new_password, 10);
+        console.log(hashed_pass);
+        
         const updated_pass_user = await User.findOneAndUpdate({email :email}, {password: hashed_pass},{useFindAndModify: false});
 
         if (updated_pass_user!=null) {
