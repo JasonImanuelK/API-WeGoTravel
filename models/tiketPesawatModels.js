@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const tiketPesawatSchema = new mongoose.Schema({
+    id_pengguna: {
+        type: String,
+        required: [true, 'Id pengguna harus diisi']
+    },
     tanggal_pemesanan: {
         type: Date,
         required: [true, 'Tanggal pemesanan harus diisi']

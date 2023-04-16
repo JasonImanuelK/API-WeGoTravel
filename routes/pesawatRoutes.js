@@ -6,22 +6,22 @@ const router = express.Router();
 
 router
 .route('/')
-.get(pesawatControllers.lihatPesawat)
+.get(auth('user'), pesawatControllers.lihatPesawat)
 
 router
 .route('/kursi/:id')
-.get(pesawatControllers.lihatKursi)
+.get(auth('user'), pesawatControllers.lihatKursi)
 
 router
 .route('/pesan')
-.post(pesawatControllers.pesanPesawat)
+.post(auth('user'), pesawatControllers.pesanPesawat)
 
 router
 .route('/batal')
-.put(pesawatControllers.batalPesawat)
+.put(auth('user'), pesawatControllers.batalPesawat)
 
 router
 .route('/selesai')
-.put(pesawatControllers.selesaiPesawat)
+.put(auth('user'), pesawatControllers.selesaiPesawat)
 
 module.exports = router;
