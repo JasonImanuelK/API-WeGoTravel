@@ -3,7 +3,7 @@ const tiketHotel = require('../models/tiketHotelModels');
 
 exports.getTiketPesawat = async (req, res) => {
     try {
-        const id_pengguna = req.params.id_pengguna;
+        const id_pengguna = req.params('id_pengguna');
         const tiket_pesawat = await tiketPesawat.find({ id_pengguna: id_pengguna});
         
         if(tiket_pesawat.length==0){
@@ -25,7 +25,7 @@ exports.getTiketPesawat = async (req, res) => {
 
 exports.getTiketHotel = async (req, res) => {
     try {
-        const id_pengguna = req.params.id_pengguna;
+        const id_pengguna = req.params('id_pengguna');
         const tiket_hotel = await tiketHotel.find({ id_pengguna: id_pengguna});
         
         if(tiket_hotel.length==0){

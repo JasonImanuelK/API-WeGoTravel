@@ -36,7 +36,7 @@ exports.getKuponAdmin = async (req, res) => {
 
 exports.getKuponUser = async (req, res) => {
     try {
-        const id_pengguna = req.params.id_pengguna;
+        const id_pengguna = req.params('id_pengguna');
         const kupon = await Kupon.find({ id_pengguna: id_pengguna});
         
         if(kupon.length==0){
