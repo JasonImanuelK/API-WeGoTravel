@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const Pesawat = require('./../models/pesawatModels');
 const KursiPesawat = require('./../models/kursiPesawatModels');
 const TiketPesawat = require('./../models/tiketPesawatModels');
+const kuponControllers = require('./../controllers/kuponControllers.js');
 
 dotenv.config ({ path: './config.env'});
 
@@ -54,7 +55,7 @@ exports.lihatKursi = async (req, res) => {
 
 exports.pesanPesawat = async (req, res) => {
     //minta detail pemesanan dari body
-    const {id_kursi, tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_voucher}  = req.body;
+    const {id_pengguna, id_kursi, tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_voucher}  = req.body;
 
     try {
         //cari kursi yang ingin dipesan
@@ -90,7 +91,7 @@ exports.pesanPesawat = async (req, res) => {
         const tanggal_jam_berangkat = pesawat.tanggal_jam_berangkat;
 
         //isi data dalam tiket lalu insert
-        const pesanan = new TiketPesawat ({tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_kursi, nomor_kursi, tipe_kursi, harga_kursi, maskapai, tempat_berangkat, tujuan_berangkat, tanggal_jam_berangkat, id_voucher});
+        const pesanan = new TiketPesawat ({id_pengguna, tanggal_pemesanan, status_pemesanan, nama_depan, nama_belakang, jenis_kelamin, tanggal_lahir, email, nomor_telepon, id_kursi, nomor_kursi, tipe_kursi, harga_kursi, maskapai, tempat_berangkat, tujuan_berangkat, tanggal_jam_berangkat, id_voucher});
         
         //update kursi yang dipesan menjadi terisi
         const update_kursi = await KursiPesawat.findByIdAndUpdate(id_kursi, {status_kursi:"Terisi"});
@@ -101,6 +102,11 @@ exports.pesanPesawat = async (req, res) => {
                 message: 'Error update kursi'
             });
         } else {
+            //update voucher menjadi sudah tidak berlaku
+            if (id_voucher != '') {
+                kuponControllers.updateKupon(id_voucher, 'Tidak Berlaku');
+            }
+
             await pesanan.save();
             return res.status(200).json({
                 status: 'success',
@@ -145,12 +151,19 @@ exports.batalPesawat = async (req, res) => {
         //update tiket menjadi dibatalkan
         const update_tiket = await TiketPesawat.findByIdAndUpdate(id_tiket_pesawat, {status_pemesanan:"Dibatalkan"});
 
+        const id_voucher = tiket.id_voucher;
+
         if (!update_tiket) {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Error update tiket pesawat'
             });
         } else {
+            //update voucher menjadi berlaku kembali
+            if (id_voucher != '') {
+                kuponControllers.updateKupon(id_voucher, 'Berlaku');
+            }
+            
             return res.status(200).json({
                 status: 'success',
                 message: 'Berhasil update tiket'
