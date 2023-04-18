@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const Pesawat = require('./../models/pesawatModels');
 const KursiPesawat = require('./../models/kursiPesawatModels');
 const TiketPesawat = require('./../models/tiketPesawatModels');
-const kuponControllers = require('./../controllers/kuponControllers.js');
+const Kupon = require('./../models/kuponModels');
 
 dotenv.config ({ path: './config.env'});
 
@@ -12,7 +12,7 @@ exports.lihatPesawat = async (req, res) => {
 
     try {
         //search pesawat sesuai filter
-        const arrpesawat = await Pesawat.find({tempat_berangkat: tempat_berangkat, tujuan_berangkat: tujuan_berangkat, tanggal_jam_berangkat: tanggal_jam_berangkat});
+        const arrpesawat = await Pesawat.find({tempat_berangkat: tempat_berangkat, tujuan_berangkat: tujuan_berangkat, tanggal_jam_berangkat: {$gte: tanggal_jam_berangkat}});
 
         if (arrpesawat) {
             return res.status(201).json({
@@ -161,7 +161,14 @@ exports.batalPesawat = async (req, res) => {
         } else {
             //update voucher menjadi berlaku kembali
             if (id_voucher != '') {
-                kuponControllers.updateKupon(id_voucher, 'Berlaku');
+                const update_kupon = await Kupon.findByIdAndUpdate(id_voucher, {statusPenggunaan:"Berlaku"});
+
+                if (!update_kupon) {
+                    return res.status(400).json({
+                        status: 'fail',
+                        message: 'Error update kupon'
+                    });
+                }
             }
             
             return res.status(200).json({
