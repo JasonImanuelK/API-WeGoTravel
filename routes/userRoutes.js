@@ -1,6 +1,7 @@
 const express = require('express');
 const userControllers = require('./../controllers/userControllers.js');
 const auth = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -23,5 +24,9 @@ router
 router
 .route('/updateProfile/:id')
 .put(auth("all_user"), userControllers.updateProfile)
+
+router
+.route('/image/:userId')
+.put(upload.single('image'), userControllers.uploadProfileImage);
 
 module.exports = router;

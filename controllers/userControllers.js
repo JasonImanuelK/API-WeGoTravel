@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 const User = require('./../models/userModels');
 
 dotenv.config ({ path: './config.env'});
@@ -158,3 +160,35 @@ exports.lupaPassword = async (req, res) => {
         res.status(500).send('Server error !');
     }
 };
+
+exports.uploadProfileImage = async (req, res) => {
+    const userId = req.params.userId;
+  
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+  
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profileImgPath: req.file.path },
+        { new: true, useFindAndModify: false }
+      );
+  
+      if (updatedUser) {
+        res.status(200).json({
+          status: 'success',
+          data: updatedUser,
+        });
+      } else {
+        res.status(404).json({
+          status: 'fail',
+          message: 'User not found',
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+};
+  
