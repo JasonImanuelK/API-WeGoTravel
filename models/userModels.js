@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true],
         unique: false
+    },
+    profileImgPath:{
+        type: String,
+        required: [false],
+        unique: true
     }
 });
 
